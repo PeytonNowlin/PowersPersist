@@ -1,0 +1,11 @@
+{
+  "id": "PowersPersist",
+  "name": "Powers Persist",
+  "author": "Peyton Nowlin",
+  "description": "Buffs and debuffs persist on the player across combats. Resets on save-and-quit. Optional toggles: remove power cards from the deck on play, skip persisting debuff-type powers, and skip persisting powers gained outside of combat (events).",
+  "version": "v0.1.0",
+  "has_pck": false,
+  "has_dll": true,
+  "dependencies": ["BaseLib"],
+  "affects_gameplay": true
+}

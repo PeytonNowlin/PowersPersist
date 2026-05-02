@@ -6,6 +6,11 @@ A faithful port of the popular Slay the Spire 1 mod
 "[Powers Persist](https://steamcommunity.com/sharedfiles/filedetails/?id=3630689909)"
 to Slay the Spire 2.
 
+- **Source:** [github.com/PeytonNowlin/PowersPersist](https://github.com/PeytonNowlin/PowersPersist)
+- **License:** MIT (see [`LICENSE`](https://github.com/PeytonNowlin/PowersPersist/blob/main/LICENSE))
+- **Bugs / feature requests:** [GitHub Issues](https://github.com/PeytonNowlin/PowersPersist/issues)
+  or the **Bugs** tab on Nexus
+
 ---
 
 ## Features
@@ -103,7 +108,9 @@ The mod is fully usable without touching anything here.
 
 ## Reporting bugs
 
-Please open a report on the **Bugs** tab of this Nexus page with:
+Open an issue on
+[GitHub Issues](https://github.com/PeytonNowlin/PowersPersist/issues) or the
+**Bugs** tab on Nexus with:
 
 - A short description of what happened vs. what you expected.
 - Your game version (visible on the main menu) and BaseLib version.
@@ -126,17 +133,22 @@ Please open a report on the **Bugs** tab of this Nexus page with:
 
 ## Source code
 
-Source is MIT-licensed. See `LICENSE` in the repo. Pull requests welcome.
+Source is MIT-licensed and lives at
+[github.com/PeytonNowlin/PowersPersist](https://github.com/PeytonNowlin/PowersPersist).
+See [`LICENSE`](https://github.com/PeytonNowlin/PowersPersist/blob/main/LICENSE).
+Pull requests welcome.
 
 ### Building from source (developers only)
 
 ```bash
+git clone https://github.com/PeytonNowlin/PowersPersist.git
+cd PowersPersist
 dotnet new install Alchyr.Sts2.Templates    # one-time
 dotnet build                                 # auto-deploys to <STS2>/mods/PowersPersist/
 ```
 
 The csproj auto-discovers the STS2 install on macOS, Linux, and Windows.
 Override `Sts2Path` in `Directory.Build.props` if needed. See
-`PowersPersistCode/Patches/HOOKS.md` for the exact game class/method names
-the mod patches — that's the first place to look if a game update breaks
-something.
+[`PowersPersistCode/Patches/HOOKS.md`](https://github.com/PeytonNowlin/PowersPersist/blob/main/PowersPersistCode/Patches/HOOKS.md)
+for the exact game class/method names the mod patches — that's the first
+place to look if a game update breaks something.

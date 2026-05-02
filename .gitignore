@@ -1,12 +1,28 @@
+# Build output
 .godot/
 bin/
-/android/
-.git/
+obj/
+publish/
+release/*.zip
+dist/
+
+# IDE / editor settings
 .idea/
 .vs/
-publish/
+.vscode/
+*.user
+*.suo
 Properties/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Local-only build configuration (paths to STS2 / Godot)
+Directory.Build.props
+
+# Misc
+/android/
+.git/
 packages/
 .editorconfig
-*.user
-Directory.Build.props

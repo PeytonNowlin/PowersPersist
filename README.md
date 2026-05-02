@@ -126,9 +126,7 @@ Please open a report on the **Bugs** tab of this Nexus page with:
 
 ## Source code
 
-Source is available at
-[Powers Persist STS2 GitHub repo (TODO link once published)] under MIT.
-Pull requests welcome.
+Source is MIT-licensed. See `LICENSE` in the repo. Pull requests welcome.
 
 ### Building from source (developers only)
 

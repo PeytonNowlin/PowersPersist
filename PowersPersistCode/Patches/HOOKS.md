@@ -1,8 +1,10 @@
 # Game hooks reference (sts2.dll)
 
-Captured from `ilspycmd` decompile of
-`<STS2>/SlayTheSpire2.app/Contents/Resources/data_sts2_macos_x86_64/sts2.dll`.
-Confirmed against game build present on disk during initial development.
+Originally captured from `ilspycmd` decompile of
+`<STS2>/SlayTheSpire2.app/Contents/Resources/data_sts2_macos_x86_64/sts2.dll`
+(v0.103.x). Re-checked against BaseLib 3.4.4, Downfall 0.1.11 (min game
+0.107.1), and WineFox 1.2.17 (min game 0.110.0) for the 0.105+
+`PowerCmd.Apply` signature change.
 If hook signatures change in a game update, fix here first.
 
 ## Snapshot point: end of combat clearing
@@ -24,8 +26,13 @@ Player powers live on `Player.Creature` (a `Creature`), exposed as
 `Creature.RemoveAllPowersInternalExcept(except)` called from this method.
 
 We Harmony-`Prefix` `Player.AfterCombatEnd` and capture the current powers
-(filtered by config) into `PersistTracker` before letting the original clear
-them. The original then runs as normal.
+(filtered by config, and skipping `IsInstanced` powers whose extra instance
+data we cannot restore) into `PersistTracker` before letting the original
+clear them. The original then runs as normal.
+
+A new run without quitting the process used to leak the last snapshot into
+the next run. We Harmony-`Prefix` `RunManager.InitializeNewRun` and call
+`PersistTracker.ClearAll()`.
 
 ## Reapply point: start of next combat
 
@@ -36,8 +43,9 @@ attached (via `CombatRoom.EnterInternal -> CombatState.AddPlayer ->
 CombatState.AttachCreature`, which sets `creature.CombatState = this`). So
 `Creature.CanReceivePowers` is true and `PowerModel.ApplyInternal` will work.
 
-We Harmony-`Postfix` this method, and for each player look up its snapshot
-in `PersistTracker`. Re-application uses
+We Harmony-`Postfix` this method (no argument binding — players come from
+`CombatManager.Instance.DebugOnlyGetState()` after `_state` is assigned)
+and for each player look up its snapshot in `PersistTracker`. Re-application uses
 `PowerModel.ApplyInternal(creature, amount, silent: true)` directly (after
 constructing a fresh mutable via `ModelDb.GetByIdOrNull<PowerModel>(id).ToMutable(0)`
 and setting `Owner` via the public setter chain). This bypasses
@@ -51,14 +59,27 @@ fires so the icon shows up.
 
 ## Origin tagging
 
-`MegaCrit.Sts2.Core.Commands.PowerCmd.Apply(PowerModel power, Creature target,
-decimal amount, Creature? applier, CardModel? cardSource, bool silent = false)`
-(static, async)
+`MegaCrit.Sts2.Core.Commands.PowerCmd.Apply` (static, async)
+
+STS2 0.105+ (still current on 0.107.1 / 0.110):
+
+```csharp
+Apply(PlayerChoiceContext context, PowerModel power, Creature target,
+      decimal amount, Creature? applier, CardModel? cardSource, bool silent = false)
+```
+
+Pre-0.105 (kept as a TargetMethod fallback):
+
+```csharp
+Apply(PowerModel power, Creature target, decimal amount,
+      Creature? applier, CardModel? cardSource, bool silent = false)
+```
 
 This is the canonical entry point for applying a power. The generic
 `Apply<T>` overload also routes through here when the target doesn't already
-have the power. We Harmony-`Postfix` it: when `target.IsPlayer`, we tag
-`(player.NetId, power.Id)` in `PersistTracker.Origins` based on whether
+have the power. We Harmony-`Postfix` whichever overload exists: when
+`target.IsPlayer`, we tag `(player.NetId, power.Id)` in
+`PersistTracker.Origins` based on whether
 `CombatManager.Instance.IsInProgress` is true (Battle origin) or false
 (Event origin).
 

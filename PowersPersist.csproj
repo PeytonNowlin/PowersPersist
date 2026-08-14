@@ -33,10 +33,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <!-- Pinned to the BaseLib version that is published on Nexus. Bumping
-             this requires that BaseLib's Nexus release also be bumped, since
-             .NET assembly load is exact-version. -->
-        <PackageReference Include="Alchyr.Sts2.BaseLib" Version="3.0.9" PrivateAssets="All"/>
+        <!-- Compile against a current BaseLib. Runtime still loads BaseLib from
+             the game's mods folder; keep PowersPersist.json min_version in sync. -->
+        <PackageReference Include="Alchyr.Sts2.BaseLib" Version="3.4.0" PrivateAssets="All"/>
         <PackageReference Include="Krafs.Publicizer" Version="2.3.0" PrivateAssets="All"/>
         <PackageReference Include="Alchyr.Sts2.ModAnalyzers" Version="*" />
         <!-- Generates a .pck file when building if only using simple assets. May not work on all setups. Uncomment to test. -->

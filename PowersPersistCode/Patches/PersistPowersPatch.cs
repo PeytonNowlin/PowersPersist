@@ -14,7 +14,8 @@ namespace PowersPersist.PowersPersistCode.Patches;
 /// Snapshot Player.Creature.Powers right before the end-of-combat clear
 /// (Player.AfterCombatEnd -> Creature.RemoveAllPowersInternalExcept), and
 /// re-apply the snapshot for each player at the start of the next combat
-/// (CombatManager.SetUpCombat Postfix).
+/// (CombatManager.SetUpCombat Postfix, reading players from
+/// CombatManager.DebugOnlyGetState).
 ///
 /// Both filter toggles are applied at snapshot time, not reapply time, so
 /// that toggling the filter mid-run takes effect on the next end-of-combat.
@@ -31,6 +32,14 @@ internal static class PersistPowersPatch
                 List<PersistedPower> snapshot = new();
                 foreach (PowerModel power in __instance.Creature.Powers)
                 {
+                    // Instanced powers store extra per-instance data (Nightmare's
+                    // chosen card, etc.) that we cannot restore from Id+Amount.
+                    // Re-applying them softlocks combat — reported on Nexus.
+                    if (power.IsInstanced)
+                    {
+                        continue;
+                    }
+
                     if (PowersPersistConfig.SkipNegativePowers
                         && power.TypeForCurrentAmount == PowerType.Debuff)
                     {
@@ -59,10 +68,19 @@ internal static class PersistPowersPatch
     [HarmonyPatch(typeof(CombatManager), nameof(CombatManager.SetUpCombat))]
     internal static class ReapplyPowersOnCombatStart
     {
-        public static void Postfix(CombatState state)
+        public static void Postfix()
         {
             try
             {
+                // Read players from the manager after SetUpCombat assigns _state.
+                // Avoids binding the SetUpCombat argument type, which has moved
+                // between CombatState and ICombatState across 0.105–0.110.
+                CombatState? state = CombatManager.Instance.DebugOnlyGetState();
+                if (state == null)
+                {
+                    return;
+                }
+
                 foreach (Player player in state.Players)
                 {
                     List<PersistedPower>? snapshot = PersistTracker.TakeSnapshot(player.NetId);

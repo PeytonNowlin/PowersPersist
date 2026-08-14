@@ -32,6 +32,14 @@ internal static class PersistPowersPatch
                 List<PersistedPower> snapshot = new();
                 foreach (PowerModel power in __instance.Creature.Powers)
                 {
+                    // Instanced powers store extra per-instance data (Nightmare's
+                    // chosen card, etc.) that we cannot restore from Id+Amount.
+                    // Re-applying them softlocks combat — reported on Nexus.
+                    if (power.IsInstanced)
+                    {
+                        continue;
+                    }
+
                     if (PowersPersistConfig.SkipNegativePowers
                         && power.TypeForCurrentAmount == PowerType.Debuff)
                     {

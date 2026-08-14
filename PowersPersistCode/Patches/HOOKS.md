@@ -26,8 +26,13 @@ Player powers live on `Player.Creature` (a `Creature`), exposed as
 `Creature.RemoveAllPowersInternalExcept(except)` called from this method.
 
 We Harmony-`Prefix` `Player.AfterCombatEnd` and capture the current powers
-(filtered by config) into `PersistTracker` before letting the original clear
-them. The original then runs as normal.
+(filtered by config, and skipping `IsInstanced` powers whose extra instance
+data we cannot restore) into `PersistTracker` before letting the original
+clear them. The original then runs as normal.
+
+A new run without quitting the process used to leak the last snapshot into
+the next run. We Harmony-`Prefix` `RunManager.InitializeNewRun` and call
+`PersistTracker.ClearAll()`.
 
 ## Reapply point: start of next combat
 

@@ -79,4 +79,16 @@ public static class PersistTracker
             Origins.Remove(key);
         }
     }
+
+    /// <summary>
+    /// Wipe every snapshot and origin tag. Used when a new run starts so
+    /// powers from a just-finished run cannot leak into the next one
+    /// without quitting the process.
+    /// </summary>
+    public static void ClearAll()
+    {
+        Snapshots.Clear();
+        Origins.Clear();
+        IsReapplying = false;
+    }
 }

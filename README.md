@@ -9,7 +9,8 @@ to Slay the Spire 2.
 - **Source:** [github.com/PeytonNowlin/PowersPersist](https://github.com/PeytonNowlin/PowersPersist)
 - **License:** MIT (see [`LICENSE`](https://github.com/PeytonNowlin/PowersPersist/blob/main/LICENSE))
 - **Bugs / feature requests:** [GitHub Issues](https://github.com/PeytonNowlin/PowersPersist/issues)
-  or the **Bugs** tab on Nexus
+  or the **Bugs** tab on
+  [Nexus](https://www.nexusmods.com/slaythespire2/mods/754?tab=bugs)
 
 ---
 
@@ -99,8 +100,11 @@ The mod is fully usable without touching anything here.
   issue. Stick to single-player to avoid it.
 - **Save and quit clears your powers.** This is **by design** to match the
   original mod's behavior. The persisted powers live in memory only and die
-  with the game process. If you want them to survive saves, that's a
-  different mod.
+  with the game process. Starting a **new run** without quitting also
+  clears them. If you want them to survive saves, that's a different mod.
+- **Instanced powers are not persisted.** Powers that store extra per-instance
+  data (Silent's Nightmare chosen card, and similar) cannot be restored from
+  id + amount alone. Carrying them over softlocked the next combat.
 - **Power-card removal happens at the end of the play, not instantly.**
   When `Remove power cards from deck on play` is on, the deck-purge
   triggers right after the card finishes resolving. You may briefly see the

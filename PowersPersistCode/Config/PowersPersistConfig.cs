@@ -7,7 +7,7 @@ namespace PowersPersist.PowersPersistCode.Config;
 /// (see BaseLib's ModConfig.CheckConfigProperties which warns and ignores
 /// instance properties).
 ///
-/// Localization keys (optional, omitted in v0.1.0): the property name itself
+/// Localization keys (optional, omitted in v0.2.0): the property name itself
 /// is used as the displayed label when no LocString is registered under
 /// "settings_ui" -> "POWERSPERSIST-&lt;slugified_property_name&gt;.title".
 /// </summary>

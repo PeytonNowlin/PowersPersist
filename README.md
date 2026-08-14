@@ -80,9 +80,9 @@ The mod is fully usable without touching anything here.
 
 ## Compatibility
 
-- **Game version:** built against Slay the Spire 2 v0.103.x; should work on
-  any version where `BaseLib` itself loads. If a game patch breaks it I'll
-  push an update.
+- **Game version:** built against Slay the Spire 2 **v0.107.1+** (current
+  main and later betas, including v0.110). Requires **BaseLib 3.4.0+**.
+  If a game patch breaks it I'll push an update.
 - **Multiplayer:** marked as gameplay-affecting, so every player in a co-op
   lobby needs both this mod and BaseLib at the same versions, otherwise the
   game won't let you connect. **Single-player is the recommended way to
